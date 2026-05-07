@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AppFitnessTrackerReal.MainPage" Title=""
+        >
+    <ScrollView
+        >
+        <Grid>
+            <Image Source="loginbg.png"
+                   ZIndex="0"
+                   Aspect="AspectFit"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Start" />  
+
+            <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
+                <Label Text="Login" 
+                       VerticalOptions="Center" 
+                       HorizontalOptions="Center" 
+                       ZIndex="1"
+                       FontSize="24"
+                       FontFamily="Megrim"
+                       TextColor="Black"
+                       />
+
+                <Border StrokeShape="RoundRectangle 90"
+                        Stroke="#E0E0E0"
+                        StrokeThickness="1.5"
+                        BackgroundColor="#E3E0D7"
+                        Padding="15,0"
+                        HeightRequest="40"
+                        Margin="10">
+                    <Entry Placeholder="" 
+                           x:Name="loginStr" 
+                           TextColor="Black"
+                           VerticalOptions="Center" 
+                           HorizontalOptions="Center" 
+                           ZIndex="1"
+                           Background="#E3E0D7"
+                           FontFamily="Megrim"
+                           PlaceholderColor="Black"
+                           WidthRequest="201"
+                           HeightRequest="31"/>
+                </Border>
+
+                <Label Text="Password" 
+                       VerticalOptions="Center" 
+                       HorizontalOptions="Center" 
+                       ZIndex="1" 
+                       FontSize="24"
+                       FontFamily="Megrim"
+                       TextColor="Black"
+                       />
+
+                <Border StrokeShape="RoundRectangle 25"
+                        Stroke="#E0E0E0"
+                        StrokeThickness="1.5"
+                        BackgroundColor="#E3E0D7"
+                        Padding="15,0"
+                        HeightRequest="40"
+                        Margin="10"
+                        >
+                    <Entry Placeholder="" 
+                           FontFamily="Megrim"
+                           x:Name="PasswordStr" 
+                           VerticalOptions="Center" 
+                           HorizontalOptions="Center" 
+                           ZIndex="1"
+                           TextColor="Black"
+                           Background="#E3E0D7"
+                           PlaceholderColor="Black"
+                           WidthRequest="201"
+                           HeightRequest="31"
+                           IsPassword="True"
+                           />
+                </Border>
+                <Label Text="Email" 
+                       VerticalOptions="Center" 
+                       HorizontalOptions="Center" 
+                       ZIndex="1" 
+                       FontSize="24"
+                       FontFamily="Megrim"
+                       TextColor="Black"
+                       />
+
+                <Border StrokeShape="RoundRectangle 25"
+                        Stroke="#E0E0E0"
+                        StrokeThickness="1.5"
+                        BackgroundColor="#E3E0D7"
+                        Padding="15,0"
+                        HeightRequest="40"
+                        Margin="10"
+                        >
+                    <Entry Placeholder="youremail@gmail.com" 
+                           FontFamily="Megrim"
+                           x:Name="EmailStr" 
+                           VerticalOptions="Center" 
+                           HorizontalOptions="Center" 
+                           ZIndex="1"
+                           TextColor="Black"
+                           Background="#E3E0D7"
+                           PlaceholderColor="#232323"
+                           WidthRequest="201"
+                           HeightRequest="31"
+                           />
+                </Border>
+                <Button Text="Log in"
+                        BackgroundColor="Black"
+                        TextColor="Wheat"
+                        WidthRequest="100"
+                        FontFamily="Megrim"
+                        Clicked="OnLoginClicked"
+                        Margin="0,15,0,0"
+                        />
+            </VerticalStackLayout>
+            
+        </Grid>
+      
+    </ScrollView>
+</ContentPage>
