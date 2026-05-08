@@ -2,10 +2,49 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AppFitnessTrackerReal.Dashbord"
-             BackgroundColor="#D8D2C8"
+             BackgroundColor="#000000"
              Title="">
     <ScrollView>
-        
+        <Grid HorizontalOptions="Center" VerticalOptions="Start" WidthRequest="480" HeightRequest="2700" BackgroundColor="White">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="300"/>
+
+                <RowDefinition Height="*"/>
+
+            </Grid.RowDefinitions>
+            
+            <Rectangle Grid.Row="0"
+                Fill="#333333" />
+            <VerticalStackLayout Grid.Row="1">
+                <Button Text="Home" 
+                            FontSize="18"
+                            FontFamily="Megrim"
+                            BackgroundColor="#333333"
+                            TextColor="White"
+                            
+                />
+                <Button Text="Activity" 
+                            FontSize="18"
+                            FontFamily="Megrim"
+                            BackgroundColor="#333333"
+                            TextColor="White"
+                />
+                <Button Text="Profile" 
+                            FontSize="18"
+                            FontFamily="Megrim"
+                            BackgroundColor="#333333"
+                />
+                <Button Text="Settings" 
+                            FontSize="18"
+                            FontFamily="Megrim"
+                />
+
+            </VerticalStackLayout>
+
+
+            
+
+        </Grid>
     </ScrollView>
   
 </ContentPage>

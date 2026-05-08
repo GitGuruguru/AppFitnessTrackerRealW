@@ -12,4 +12,9 @@ public partial class Dashbord : ContentPage
     {
         InitializeComponent();
     }
+
+    private void OnLogoutClicked(object sender, EventArgs e)
+    {
+
+    }
 }
