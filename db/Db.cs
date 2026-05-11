@@ -56,6 +56,15 @@ namespace AppFitnessTrackerReal.db
             return $"Succces, deleted {user.Name}, {user.Email}  !";
         }
 
+        public static async Task<User?> GetLatestUser()
+        {
+            await Init();
+            return await _sqliteDb!
+                .Table<User>()
+                .OrderByDescending(user => user.Id)
+                .FirstOrDefaultAsync();
+        }
+
         public static async Task<List<ActivityNode>> GetActivities()
         {
             await Init();
@@ -69,6 +78,60 @@ namespace AppFitnessTrackerReal.db
         {
             await Init();
             await _sqliteDb!.InsertAsync(activity);
+        }
+
+        public static async Task<List<DietNode>> GetDishes()
+        {
+            await Init();
+            return await _sqliteDb!
+                .Table<DietNode>()
+                .OrderByDescending(dish => dish.Id)
+                .ToListAsync();
+        }
+
+        public static async Task AddDish(DietNode dish)
+        {
+            await Init();
+            await _sqliteDb!.InsertAsync(dish);
+        }
+
+        public static async Task UpdateDish(DietNode dish)
+        {
+            await Init();
+            await _sqliteDb!.UpdateAsync(dish);
+        }
+
+        public static async Task DeleteDish(DietNode dish)
+        {
+            await Init();
+            await _sqliteDb!.DeleteAsync(dish);
+        }
+
+        public static async Task<List<HistoryGoalNode>> GetGoals()
+        {
+            await Init();
+            return await _sqliteDb!
+                .Table<HistoryGoalNode>()
+                .OrderBy(goal => goal.FinishDate)
+                .ToListAsync();
+        }
+
+        public static async Task AddGoal(HistoryGoalNode goal)
+        {
+            await Init();
+            await _sqliteDb!.InsertAsync(goal);
+        }
+
+        public static async Task UpdateGoal(HistoryGoalNode goal)
+        {
+            await Init();
+            await _sqliteDb!.UpdateAsync(goal);
+        }
+
+        public static async Task DeleteGoal(HistoryGoalNode goal)
+        {
+            await Init();
+            await _sqliteDb!.DeleteAsync(goal);
         }
     }
 }

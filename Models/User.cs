@@ -1,7 +1,4 @@
-﻿using SQLite;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using SQLite;
 
 namespace AppFitnessTrackerReal.Models
 {
@@ -10,33 +7,25 @@ namespace AppFitnessTrackerReal.Models
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
-        private string _name;
-        public string Name {
+        private string _name = string.Empty;
+        public string Name
+        {
             get => string.IsNullOrEmpty(_name) ? "Erroe: String is not Stringing" : _name;
             set => _name = value;
         }
 
-        private string _password;
-
-        public string Password { 
+        private string _password = string.Empty;
+        public string Password
+        {
             get => string.IsNullOrEmpty(_password) ? "Error: Password is not Passwording" : _password;
             set => _password = value;
         }
-        private string _email;
+
+        private string _email = string.Empty;
         public string Email
         {
             get => string.IsNullOrEmpty(_email) ? "email" : _email;
             set => _email = value;
         }
-   
-        //public User( string name, string password)
-        //{
-        //    name = Name;
-        //    password = Password;
-        //}
-        //public  string ReturnBasicInfo()
-        //{
-        //    return $"UserName {Name}, Password {Password}";
-        //}
     }
 }
