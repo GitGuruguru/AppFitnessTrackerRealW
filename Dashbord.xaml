@@ -2,14 +2,15 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AppFitnessTrackerReal.Dashbord"
-             BackgroundColor="#F2F5FA"
+             BackgroundColor="Black"
              Title="">
     <ScrollView>
         <Grid HorizontalOptions="Center"
               VerticalOptions="Start"
               WidthRequest="420"
               MaximumWidthRequest="420"
-              Padding="18,20,18,40">
+              Padding="18,20,18,40"
+              BackgroundColor="White">
             <VerticalStackLayout Spacing="18">
                 <Grid ColumnDefinitions="Auto,* ,Auto"
                       VerticalOptions="Center">
