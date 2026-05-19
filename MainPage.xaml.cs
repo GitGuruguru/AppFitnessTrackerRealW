@@ -16,7 +16,7 @@ namespace AppFitnessTrackerReal
         {
             if (_loading) return;
             _loading = true;
-
+            // regex for email validation [a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}
             try
             {
                 if (string.IsNullOrWhiteSpace(loginStr.Text) ||
@@ -27,6 +27,11 @@ namespace AppFitnessTrackerReal
                     return;
                 }
 
+                if (!System.Text.RegularExpressions.Regex.IsMatch(EmailStr.Text, @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"))
+                {
+                    await DisplayAlertAsync("Error", "Invalid email format.", "OK");
+                    return;
+                }
                 User newUser = new User
                 {
                     Name = loginStr.Text,

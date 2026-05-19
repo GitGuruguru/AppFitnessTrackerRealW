@@ -75,10 +75,7 @@
                                    FontFamily="MuseoModernoBold"
                                    FontSize="24"
                                    TextColor="White" />
-                            <Label Text="Your dish list grows the macro ring in real time."
-                                   FontFamily="OpenSansRegular"
-                                   FontSize="13"
-                                   TextColor="#9FB0CF" />
+                          
                         </VerticalStackLayout>
 
                         <Grid HorizontalOptions="Center"
