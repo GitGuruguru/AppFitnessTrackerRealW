@@ -11,6 +11,7 @@ public partial class Dashbord : ContentPage
     private readonly ObservableCollection<HistoryGoalNode> _goals = [];
     private readonly MacroRingDrawable _macroRingDrawable = new();
 
+    private User? _activeUser;
     private DietNode? _selectedDish;
     private DishEditorMode _dishEditorMode = DishEditorMode.Add;
     private bool _isLoaded;
@@ -52,13 +53,20 @@ public partial class Dashbord : ContentPage
 
     private async Task LoadUserAsync()
     {
-        var user = await Db.GetLatestUser();
-        UserNameLabel.Text = user?.Name ?? "Guest";
+        _activeUser = await Db.GetActiveUser() ?? await Db.GetLatestUser();
+        UserNameLabel.Text = _activeUser?.Name ?? "Guest";
     }
 
     private async Task LoadDishesAsync()
     {
-        var dishes = await Db.GetDishes();
+        if (_activeUser == null)
+        {
+            _dishes.Clear();
+            await AnimateMacroRingAsync(0, 0, 0);
+            return;
+        }
+
+        var dishes = await Db.GetDishes(_activeUser.Id);
 
         _dishes.Clear();
         foreach (var dish in dishes)
@@ -74,7 +82,13 @@ public partial class Dashbord : ContentPage
 
     private async Task LoadGoalsAsync()
     {
-        var goals = await Db.GetGoals();
+        if (_activeUser == null)
+        {
+            _goals.Clear();
+            return;
+        }
+
+        var goals = await Db.GetGoals(_activeUser.Id);
 
         _goals.Clear();
         foreach (var goal in goals)
@@ -90,6 +104,7 @@ public partial class Dashbord : ContentPage
 
     private async void OnLogoutClicked(object? sender, EventArgs e)
     {
+        Db.ClearActiveUser();
         await Shell.Current.GoToAsync("//MainPage");
     }
 
@@ -168,8 +183,15 @@ public partial class Dashbord : ContentPage
         }
         else
         {
+            if (_activeUser == null)
+            {
+                await DisplayAlertAsync("No user", "Log in again before adding dishes.", "OK");
+                return;
+            }
+
             var dish = new DietNode
             {
+                UserId = _activeUser.Id,
                 Dishname = DishNameEntry.Text.Trim(),
                 Description = DishDescriptionEditor.Text.Trim(),
                 Protein = protein,
@@ -250,6 +272,7 @@ public partial class Dashbord : ContentPage
 
         var goal = new HistoryGoalNode
         {
+            UserId = _activeUser?.Id ?? 0,
             Header = GoalTitleEntry.Text.Trim(),
             Description = GoalDescriptionEditor.Text.Trim(),
             FinishDate = GoalDatePicker.Date ?? DateTime.Today,
@@ -257,6 +280,12 @@ public partial class Dashbord : ContentPage
             IsRecurring = RecurringGoalCheckBox.IsChecked,
             Progress = GoalProgressSlider.Value / 100d
         };
+
+        if (goal.UserId <= 0)
+        {
+            await DisplayAlertAsync("No user", "Log in again before creating goals.", "OK");
+            return;
+        }
 
         await Db.AddGoal(goal);
         GoalEditorPanel.IsVisible = false;
