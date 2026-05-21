@@ -7,6 +7,8 @@ namespace AppFitnessTrackerReal.Models
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
+        public int UserId { get; set; }
+
         private string _dishname = string.Empty;
         public string Dishname
         {

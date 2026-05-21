@@ -5,12 +5,13 @@ namespace AppFitnessTrackerReal.db
 {
     internal class Db
     {
+        private const string ActiveUserPreferenceKey = "active_user_id";
+
         private static SQLiteAsyncConnection? _sqliteDb;
-        private static SQLiteAsyncConnection? _sqliteDb2;
 
         public static async Task Init()
         {
-            if (_sqliteDb != null || _sqliteDb2 != null)
+            if (_sqliteDb != null)
             {
                 return;
             }
@@ -19,27 +20,52 @@ namespace AppFitnessTrackerReal.db
             Directory.CreateDirectory(dbDirectory);
 
             var dbPath = Path.Combine(dbDirectory, "fitnessDb.db");
-            var dbPath2 = Path.Combine(dbDirectory, "restoredb.db");
-
-            if (_sqliteDb2 == null)
-            {
-                _sqliteDb2 = new SQLiteAsyncConnection(dbPath2);
-                await _sqliteDb2.CreateTableAsync<User>();
-            }
-
             _sqliteDb = new SQLiteAsyncConnection(dbPath);
 
             await _sqliteDb.CreateTableAsync<User>();
-            await _sqliteDb.CreateTableAsync<HistoryGoalNode>();
-            await _sqliteDb.CreateTableAsync<DietNode>();
             await _sqliteDb.CreateTableAsync<ActivityNode>();
             await _sqliteDb.CreateTableAsync<Ingridien>();
+
+            await EnsureColumnAsync("User", "DishesJson", "TEXT NOT NULL DEFAULT '[]'");
+            await EnsureColumnAsync("User", "HistoryJson", "TEXT NOT NULL DEFAULT '[]'");
+        }
+
+        private static async Task EnsureColumnAsync(string tableName, string columnName, string columnDefinition)
+        {
+            var existingColumns = await _sqliteDb!.QueryAsync<TableInfoRow>($"PRAGMA table_info([{tableName}])");
+            if (existingColumns.Any(column => string.Equals(column.Name, columnName, StringComparison.OrdinalIgnoreCase)))
+            {
+                return;
+            }
+
+            await _sqliteDb.ExecuteAsync($"ALTER TABLE [{tableName}] ADD COLUMN [{columnName}] {columnDefinition}");
+        }
+
+        public static async Task<User> GetOrCreateUser(User candidate)
+        {
+            await Init();
+
+            var existingUser = await _sqliteDb!
+                .Table<User>()
+                .Where(user => user.Email == candidate.Email)
+                .FirstOrDefaultAsync();
+
+            if (existingUser != null)
+            {
+                Preferences.Set(ActiveUserPreferenceKey, existingUser.Id);
+                return existingUser;
+            }
+
+            await _sqliteDb.InsertAsync(candidate);
+            Preferences.Set(ActiveUserPreferenceKey, candidate.Id);
+            return candidate;
         }
 
         public static async Task AddUser(User user)
         {
             await Init();
             await _sqliteDb!.InsertAsync(user);
+            Preferences.Set(ActiveUserPreferenceKey, user.Id);
         }
 
         public static async Task UpdateUser(User user)
@@ -51,9 +77,43 @@ namespace AppFitnessTrackerReal.db
         public static async Task<string> DeleteUser(User user)
         {
             await Init();
-            await _sqliteDb2!.InsertAsync(user);
             await _sqliteDb!.DeleteAsync(user);
             return $"Succces, deleted {user.Name}, {user.Email}  !";
+        }
+
+        public static int GetActiveUserId()
+        {
+            return Preferences.Get(ActiveUserPreferenceKey, 0);
+        }
+
+        public static void ClearActiveUser()
+        {
+            Preferences.Remove(ActiveUserPreferenceKey);
+        }
+
+        public static async Task<User?> GetActiveUser()
+        {
+            await Init();
+
+            var activeUserId = GetActiveUserId();
+            if (activeUserId <= 0)
+            {
+                return null;
+            }
+
+            return await _sqliteDb!
+                .Table<User>()
+                .Where(user => user.Id == activeUserId)
+                .FirstOrDefaultAsync();
+        }
+
+        public static async Task<User?> GetLatestUser()
+        {
+            await Init();
+            return await _sqliteDb!
+                .Table<User>()
+                .OrderByDescending(user => user.Id)
+                .FirstOrDefaultAsync();
         }
 
         public static async Task<List<ActivityNode>> GetActivities()
@@ -69,6 +129,86 @@ namespace AppFitnessTrackerReal.db
         {
             await Init();
             await _sqliteDb!.InsertAsync(activity);
+        }
+
+        public static async Task<List<DietNode>> GetDishes(int userId)
+        {
+            var user = await GetUserById(userId);
+            return user?.Dishes.OrderByDescending(dish => dish.Id).ToList() ?? [];
+        }
+
+        public static async Task AddDish(DietNode dish)
+        {
+            var user = await GetRequiredActiveUser();
+            user.AddDish(dish);
+            await UpdateUser(user);
+        }
+
+        public static async Task UpdateDish(DietNode dish)
+        {
+            var user = await GetRequiredActiveUser();
+            user.UpdateDish(dish);
+            await UpdateUser(user);
+        }
+
+        public static async Task DeleteDish(DietNode dish)
+        {
+            var user = await GetRequiredActiveUser();
+            user.DeleteDish(dish.Id);
+            await UpdateUser(user);
+        }
+
+        public static async Task<List<HistoryGoalNode>> GetGoals(int userId)
+        {
+            var user = await GetUserById(userId);
+            return user?.History.OrderBy(goal => goal.FinishDate).ToList() ?? [];
+        }
+
+        public static async Task AddGoal(HistoryGoalNode goal)
+        {
+            var user = await GetRequiredActiveUser();
+            user.AddHistoryGoal(goal);
+            await UpdateUser(user);
+        }
+
+        public static async Task UpdateGoal(HistoryGoalNode goal)
+        {
+            var user = await GetRequiredActiveUser();
+            user.UpdateHistoryGoal(goal);
+            await UpdateUser(user);
+        }
+
+        public static async Task DeleteGoal(HistoryGoalNode goal)
+        {
+            var user = await GetRequiredActiveUser();
+            user.DeleteHistoryGoal(goal.Id);
+            await UpdateUser(user);
+        }
+
+        private static async Task<User?> GetUserById(int userId)
+        {
+            await Init();
+            return await _sqliteDb!
+                .Table<User>()
+                .Where(user => user.Id == userId)
+                .FirstOrDefaultAsync();
+        }
+
+        private static async Task<User> GetRequiredActiveUser()
+        {
+            var user = await GetActiveUser();
+            if (user == null)
+            {
+                throw new InvalidOperationException("No active user is available.");
+            }
+
+            return user;
+        }
+
+        private sealed class TableInfoRow
+        {
+            [Column("name")]
+            public string Name { get; set; } = string.Empty;
         }
     }
 }

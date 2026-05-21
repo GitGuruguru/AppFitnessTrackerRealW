@@ -7,6 +7,8 @@ namespace AppFitnessTrackerReal.Models
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
+        public int UserId { get; set; }
+
         private string _header = string.Empty;
         public string Header
         {
@@ -24,5 +26,9 @@ namespace AppFitnessTrackerReal.Models
         public double Progress { get; set; }
 
         public DateTime FinishDate { get; set; } = DateTime.UtcNow;
+
+        public string ScheduleType { get; set; } = "Daily";
+
+        public bool IsRecurring { get; set; }
     }
 }
