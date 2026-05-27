@@ -16,10 +16,9 @@ namespace AppFitnessTrackerReal.db
                 return;
             }
 
-            var dbDirectory = FileSystem.AppDataDirectory;
-            Directory.CreateDirectory(dbDirectory);
+            
 
-            var dbPath = Path.Combine(dbDirectory, "fitnessDb.db");
+            var dbPath = Path.Combine(@"C:\Users\lokom\Documents\AppFitnessTrackerReal\db\", "fitnessDb.db");
             _sqliteDb = new SQLiteAsyncConnection(dbPath);
 
             await _sqliteDb.CreateTableAsync<User>();
