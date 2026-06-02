@@ -13,7 +13,7 @@
                    VerticalOptions="Start" />  
 
             <VerticalStackLayout HorizontalOptions="Center" VerticalOptions="Center">
-                <Label Text="Login" 
+                <Label Text="Nazwa uzytkownika" 
                        VerticalOptions="Center" 
                        HorizontalOptions="Center" 
                        ZIndex="1"
@@ -42,7 +42,7 @@
                            HeightRequest="31"/>
                 </Border>
 
-                <Label Text="Password" 
+                <Label Text="Haslo" 
                        VerticalOptions="Center" 
                        HorizontalOptions="Center" 
                        ZIndex="1" 
@@ -73,7 +73,7 @@
                            IsPassword="True"
                            />
                 </Border>
-                <Label Text="Email" 
+                <Label Text="Adres email" 
                        VerticalOptions="Center" 
                        HorizontalOptions="Center" 
                        ZIndex="1" 
@@ -103,7 +103,7 @@
                            HeightRequest="31"
                            />
                 </Border>
-                <Button Text="Log in"
+                <Button Text="Zaloguj"
                         BackgroundColor="Black"
                         TextColor="Wheat"
                         WidthRequest="100"

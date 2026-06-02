@@ -12,14 +12,14 @@ namespace AppFitnessTrackerReal.Models
         private string _dishname = string.Empty;
         public string Dishname
         {
-            get => string.IsNullOrWhiteSpace(_dishname) ? "Error: Name not provided!" : _dishname;
+            get => string.IsNullOrWhiteSpace(_dishname) ? "Blad: nie podano nazwy!" : _dishname;
             set => _dishname = value;
         }
 
         private string _description = string.Empty;
         public string Description
         {
-            get => string.IsNullOrWhiteSpace(_description) ? "Error: Description not provided!" : _description;
+            get => string.IsNullOrWhiteSpace(_description) ? "Blad: nie podano opisu!" : _description;
             set => _description = value;
         }
 

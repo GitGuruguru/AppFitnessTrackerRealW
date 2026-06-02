@@ -77,7 +77,7 @@ namespace AppFitnessTrackerReal.db
         {
             await Init();
             await _sqliteDb!.DeleteAsync(user);
-            return $"Succces, deleted {user.Name}, {user.Email}  !";
+            return $"Sukces, usunieto {user.Name}, {user.Email}!";
         }
 
         public static int GetActiveUserId()
@@ -198,7 +198,7 @@ namespace AppFitnessTrackerReal.db
             var user = await GetActiveUser();
             if (user == null)
             {
-                throw new InvalidOperationException("No active user is available.");
+                throw new InvalidOperationException("Brak aktywnego uzytkownika.");
             }
 
             return user;

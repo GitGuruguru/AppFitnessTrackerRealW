@@ -7,7 +7,7 @@
     Title="AppFitnessTrackerReal">
 
     <ShellContent
-        Title="Login"
+        Title="Logowanie"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
   

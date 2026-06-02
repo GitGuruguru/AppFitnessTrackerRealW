@@ -42,12 +42,12 @@
                             <VerticalStackLayout Grid.Column="1"
                                                  Spacing="0"
                                                  VerticalOptions="Center">
-                                <Label Text="Account"
+                                <Label Text="Konto"
                                        FontFamily="OpenSansRegular"
                                        FontSize="12"
                                        TextColor="#D8E5FF" />
                                 <Label x:Name="UserNameLabel"
-                                       Text="Guest"
+                                       Text="Gosc"
                                        FontFamily="MuseoModernoMedium"
                                        FontSize="15"
                                        TextColor="White" />
@@ -56,7 +56,7 @@
                     </Border>
 
                     <Button Grid.Column="2"
-                            Text="Log out"
+                            Text="Wyloguj"
                             Clicked="OnLogoutClicked"
                             FontFamily="OpenSansSemibold"
                             BackgroundColor="#111827"
@@ -71,7 +71,7 @@
                         StrokeShape="RoundRectangle 28">
                     <VerticalStackLayout Spacing="18">
                         <VerticalStackLayout Spacing="4">
-                            <Label Text="Nutrition balance"
+                            <Label Text="Bilans odzywiania"
                                    FontFamily="MuseoModernoBold"
                                    FontSize="24"
                                    TextColor="White" />
@@ -87,7 +87,7 @@
                             <VerticalStackLayout HorizontalOptions="Center"
                                                  VerticalOptions="Center"
                                                  Spacing="2">
-                                <Label Text="Daily mix"
+                                <Label Text="Dzienny miks"
                                        HorizontalTextAlignment="Center"
                                        FontFamily="OpenSansRegular"
                                        FontSize="13"
@@ -108,7 +108,7 @@
                                     Padding="12"
                                     StrokeShape="RoundRectangle 18">
                                 <VerticalStackLayout Spacing="3">
-                                    <Label Text="Protein"
+                                    <Label Text="Bialko"
                                            FontFamily="OpenSansRegular"
                                            FontSize="12"
                                            TextColor="#9FB0CF" />
@@ -125,7 +125,7 @@
                                     Padding="12"
                                     StrokeShape="RoundRectangle 18">
                                 <VerticalStackLayout Spacing="3">
-                                    <Label Text="Carbs"
+                                    <Label Text="Wegle"
                                            FontFamily="OpenSansRegular"
                                            FontSize="12"
                                            TextColor="#9FB0CF" />
@@ -142,7 +142,7 @@
                                     Padding="12"
                                     StrokeShape="RoundRectangle 18">
                                 <VerticalStackLayout Spacing="3">
-                                    <Label Text="Fats"
+                                    <Label Text="Tluszcze"
                                            FontFamily="OpenSansRegular"
                                            FontSize="12"
                                            TextColor="#9FB0CF" />
@@ -165,17 +165,17 @@
                     <VerticalStackLayout Spacing="14">
                         <Grid ColumnDefinitions="*,Auto">
                             <VerticalStackLayout Spacing="3">
-                                <Label Text="Dish manager"
+                                <Label Text="Menedzer posilkow"
                                        FontFamily="MuseoModernoBold"
                                        FontSize="22"
                                        TextColor="#111827" />
-                                <Label Text="Add, edit, or remove dishes without leaving the dashboard."
+                                <Label Text="Dodawaj, edytuj i usuwaj posilki bez opuszczania panelu."
                                        FontFamily="OpenSansRegular"
                                        FontSize="13"
                                        TextColor="#667085" />
                             </VerticalStackLayout>
                             <Label Grid.Column="1"
-                                   Text="Tap a dish to edit"
+                                   Text="Dotknij posilku, aby edytowac"
                                    VerticalOptions="Center"
                                    FontFamily="OpenSansRegular"
                                    FontSize="12"
@@ -185,21 +185,21 @@
                         <Grid ColumnDefinitions="*,*,*"
                               ColumnSpacing="10">
                             <Button Grid.Column="0"
-                                    Text="Add"
+                                    Text="Dodaj"
                                     Clicked="OnAddDishClicked"
                                     FontFamily="OpenSansSemibold"
                                     BackgroundColor="#2B6DFF"
                                     TextColor="White"
                                     CornerRadius="18" />
                             <Button Grid.Column="1"
-                                    Text="Remove"
+                                    Text="Usun"
                                     Clicked="OnRemoveDishClicked"
                                     FontFamily="OpenSansSemibold"
                                     BackgroundColor="#F04438"
                                     TextColor="White"
                                     CornerRadius="18" />
                             <Button Grid.Column="2"
-                                    Text="Edit"
+                                    Text="Edytuj"
                                     Clicked="OnEditDishClicked"
                                     FontFamily="OpenSansSemibold"
                                     BackgroundColor="#0F172A"
@@ -216,16 +216,16 @@
                                 IsVisible="False">
                             <VerticalStackLayout Spacing="12">
                                 <Label x:Name="DishEditorTitleLabel"
-                                       Text="Add dish"
+                                       Text="Dodaj posilek"
                                        FontFamily="MuseoModernoMedium"
                                        FontSize="18"
                                        TextColor="#111827" />
                                 <Entry x:Name="DishNameEntry"
-                                       Placeholder="Dish name"
+                                       Placeholder="Nazwa posilku"
                                        BackgroundColor="White"
                                        TextColor="#111827" />
                                 <Editor x:Name="DishDescriptionEditor"
-                                        Placeholder="Short description"
+                                        Placeholder="Krotki opis"
                                         AutoSize="TextChanges"
                                         BackgroundColor="White"
                                         TextColor="#111827"
@@ -233,26 +233,26 @@
                                 <Grid ColumnDefinitions="*,*,*"
                                       ColumnSpacing="10">
                                     <Entry x:Name="ProteinEntry"
-                                           Placeholder="Protein"
+                                           Placeholder="Bialko"
                                            Keyboard="Numeric"
                                            BackgroundColor="White"
                                            TextColor="#111827" />
                                     <Entry Grid.Column="1"
                                            x:Name="CarbsEntry"
-                                           Placeholder="Carbs"
+                                           Placeholder="Wegle"
                                            Keyboard="Numeric"
                                            BackgroundColor="White"
                                            TextColor="#111827" />
                                     <Entry Grid.Column="2"
                                            x:Name="FatsEntry"
-                                           Placeholder="Fats"
+                                           Placeholder="Tluszcze"
                                            Keyboard="Numeric"
                                            BackgroundColor="White"
                                            TextColor="#111827" />
                                 </Grid>
                                 <Grid ColumnDefinitions="*,*"
                                       ColumnSpacing="10">
-                                    <Button Text="Cancel"
+                                    <Button Text="Anuluj"
                                             Clicked="OnCancelDishEditorClicked"
                                             FontFamily="OpenSansSemibold"
                                             BackgroundColor="#E5E7EB"
@@ -260,7 +260,7 @@
                                             CornerRadius="18" />
                                     <Button Grid.Column="1"
                                             x:Name="DishSaveButton"
-                                            Text="Save dish"
+                                            Text="Zapisz posilek"
                                             Clicked="OnSaveDishClicked"
                                             FontFamily="OpenSansSemibold"
                                             BackgroundColor="#2B6DFF"
@@ -278,7 +278,7 @@
                                         StrokeThickness="0"
                                         Padding="18"
                                         StrokeShape="RoundRectangle 18">
-                                    <Label Text="No dishes yet. Add one to start filling the macro ring."
+                                    <Label Text="Nie ma jeszcze posilkow. Dodaj pierwszy, aby wypelnic pierscien makro."
                                            FontFamily="OpenSansRegular"
                                            FontSize="14"
                                            TextColor="#667085" />
@@ -300,7 +300,7 @@
                                                        FontSize="17"
                                                        TextColor="#111827" />
                                                 <Label Grid.Column="1"
-                                                       Text="{Binding Protein, StringFormat='P {0}g'}"
+                                                       Text="{Binding Protein, StringFormat='B {0} g'}"
                                                        FontFamily="OpenSansRegular"
                                                        FontSize="13"
                                                        TextColor="#78D7B4" />
@@ -310,11 +310,11 @@
                                                    FontSize="13"
                                                    TextColor="#667085" />
                                             <HorizontalStackLayout Spacing="10">
-                                                <Label Text="{Binding Carbs, StringFormat='Carbs {0}g'}"
+                                                <Label Text="{Binding Carbs, StringFormat='Wegle {0} g'}"
                                                        FontFamily="OpenSansRegular"
                                                        FontSize="12"
                                                        TextColor="#2B6DFF" />
-                                                <Label Text="{Binding Fats, StringFormat='Fats {0}g'}"
+                                                <Label Text="{Binding Fats, StringFormat='Tluszcze {0} g'}"
                                                        FontFamily="OpenSansRegular"
                                                        FontSize="12"
                                                        TextColor="#F59E0B" />
@@ -334,12 +334,12 @@
                         StrokeShape="RoundRectangle 24">
                     <VerticalStackLayout Spacing="14">
                         <Grid ColumnDefinitions="*,Auto">
-                            <Label Text="Goals"
+                            <Label Text="Cele"
                                    FontFamily="MuseoModernoBold"
                                    FontSize="22"
                                    TextColor="#111827" />
                             <Button Grid.Column="1"
-                                    Text="+ Add"
+                                    Text="+ Dodaj"
                                     Clicked="OnAddGoalClicked"
                                     FontFamily="OpenSansSemibold"
                                     BackgroundColor="#2B6DFF"
@@ -355,16 +355,16 @@
                                 StrokeShape="RoundRectangle 20"
                                 IsVisible="False">
                             <VerticalStackLayout Spacing="12">
-                                <Label Text="Create goal node"
+                                <Label Text="Utworz cel"
                                        FontFamily="MuseoModernoMedium"
                                        FontSize="18"
                                        TextColor="#111827" />
                                 <Entry x:Name="GoalTitleEntry"
-                                       Placeholder="Goal title"
+                                       Placeholder="Tytul celu"
                                        BackgroundColor="White"
                                        TextColor="#111827" />
                                 <Editor x:Name="GoalDescriptionEditor"
-                                        Placeholder="Goal description"
+                                        Placeholder="Opis celu"
                                         AutoSize="TextChanges"
                                         BackgroundColor="White"
                                         TextColor="#111827"
@@ -376,13 +376,13 @@
                                                 TextColor="#111827" />
                                     <Picker Grid.Column="1"
                                             x:Name="GoalSchedulePicker"
-                                            Title="Schedule"
+                                            Title="Harmonogram"
                                             BackgroundColor="White"
                                             TextColor="#111827" />
                                 </Grid>
                                 <Grid ColumnDefinitions="*,Auto"
                                       ColumnSpacing="10">
-                                    <Label Text="Recurring goal"
+                                    <Label Text="Cel powtarzalny"
                                            VerticalOptions="Center"
                                            FontFamily="OpenSansRegular"
                                            FontSize="14"
@@ -393,7 +393,7 @@
                                 </Grid>
                                 <VerticalStackLayout Spacing="4">
                                     <Grid ColumnDefinitions="*,Auto">
-                                        <Label Text="Progress"
+                                        <Label Text="Postep"
                                                FontFamily="OpenSansRegular"
                                                FontSize="14"
                                                TextColor="#111827" />
@@ -414,14 +414,14 @@
                                 </VerticalStackLayout>
                                 <Grid ColumnDefinitions="*,*"
                                       ColumnSpacing="10">
-                                    <Button Text="Cancel"
+                                    <Button Text="Anuluj"
                                             Clicked="OnCancelGoalEditorClicked"
                                             FontFamily="OpenSansSemibold"
                                             BackgroundColor="#E5E7EB"
                                             TextColor="#111827"
                                             CornerRadius="18" />
                                     <Button Grid.Column="1"
-                                            Text="Save goal"
+                                            Text="Zapisz cel"
                                             Clicked="OnSaveGoalClicked"
                                             FontFamily="OpenSansSemibold"
                                             BackgroundColor="#111827"
@@ -438,7 +438,7 @@
                                         StrokeThickness="0"
                                         Padding="18"
                                         StrokeShape="RoundRectangle 18">
-                                    <Label Text="No goals yet. Create a daily, weekly, monthly, or yearly node."
+                                    <Label Text="Nie ma jeszcze celow. Utworz cel dzienny, tygodniowy, miesieczny lub roczny."
                                            FontFamily="OpenSansRegular"
                                            FontSize="14"
                                            TextColor="#667085" />
@@ -470,11 +470,11 @@
                                                    FontSize="13"
                                                    TextColor="#667085" />
                                             <HorizontalStackLayout Spacing="10">
-                                                <Label Text="{Binding FinishDate, StringFormat='Due {0:dd MMM yyyy}'}"
+                                                <Label Text="{Binding FinishDate, StringFormat='Termin {0:dd MMM yyyy}'}"
                                                        FontFamily="OpenSansRegular"
                                                        FontSize="12"
                                                        TextColor="#475467" />
-                                                <Label Text="{Binding IsRecurring, StringFormat='Recurring: {0}'}"
+                                                <Label Text="{Binding RecurringText, StringFormat='Powtarzalny: {0}'}"
                                                        FontFamily="OpenSansRegular"
                                                        FontSize="12"
                                                        TextColor="#475467" />
@@ -490,7 +490,7 @@
                                                        FontSize="12"
                                                        TextColor="#111827" />
                                                 <Button Grid.Column="2"
-                                                        Text="Delete"
+                                                        Text="Usun"
                                                         Clicked="OnDeleteGoalClicked"
                                                         CommandParameter="{Binding Id}"
                                                         FontFamily="OpenSansSemibold"

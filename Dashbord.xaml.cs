@@ -27,7 +27,7 @@ public partial class Dashbord : ContentPage
         DishesCollection.ItemsSource = _dishes;
         GoalsCollection.ItemsSource = _goals;
         MacroRingView.Drawable = _macroRingDrawable;
-        GoalSchedulePicker.ItemsSource = new List<string> { "Daily", "Weekly", "Monthly", "Yearly" };
+        GoalSchedulePicker.ItemsSource = new List<string> { "Dzienny", "Tygodniowy", "Miesieczny", "Roczny" };
         GoalSchedulePicker.SelectedIndex = 0;
     }
 
@@ -54,7 +54,7 @@ public partial class Dashbord : ContentPage
     private async Task LoadUserAsync()
     {
         _activeUser = await Db.GetActiveUser() ?? await Db.GetLatestUser();
-        UserNameLabel.Text = _activeUser?.Name ?? "Guest";
+        UserNameLabel.Text = _activeUser?.Name ?? "Gosc";
     }
 
     private async Task LoadDishesAsync()
@@ -99,7 +99,7 @@ public partial class Dashbord : ContentPage
 
     private void OnAccountTapped(object? sender, TappedEventArgs e)
     {
-        _ = DisplayAlertAsync("Account", $"Signed in as {UserNameLabel.Text}.", "OK");
+        _ = DisplayAlertAsync("Konto", $"Zalogowano jako {UserNameLabel.Text}.", "OK");
     }
 
     private async void OnLogoutClicked(object? sender, EventArgs e)
@@ -111,8 +111,8 @@ public partial class Dashbord : ContentPage
     private void OnAddDishClicked(object? sender, EventArgs e)
     {
         _dishEditorMode = DishEditorMode.Add;
-        DishEditorTitleLabel.Text = "Add dish";
-        DishSaveButton.Text = "Save dish";
+        DishEditorTitleLabel.Text = "Dodaj posilek";
+        DishSaveButton.Text = "Zapisz posilek";
         ClearDishEditor();
         DishEditorPanel.IsVisible = true;
     }
@@ -121,13 +121,13 @@ public partial class Dashbord : ContentPage
     {
         if (_selectedDish == null)
         {
-            await DisplayAlertAsync("Select a dish", "Tap a dish card first so we know what to edit.", "OK");
+            await DisplayAlertAsync("Wybierz posilek", "Najpierw dotknij karty posilku, aby wybrac element do edycji.", "OK");
             return;
         }
 
         _dishEditorMode = DishEditorMode.Edit;
-        DishEditorTitleLabel.Text = "Edit dish";
-        DishSaveButton.Text = "Update dish";
+        DishEditorTitleLabel.Text = "Edytuj posilek";
+        DishSaveButton.Text = "Aktualizuj";
         FillDishEditor(_selectedDish);
         DishEditorPanel.IsVisible = true;
     }
@@ -136,15 +136,15 @@ public partial class Dashbord : ContentPage
     {
         if (_selectedDish == null)
         {
-            await DisplayAlertAsync("Select a dish", "Tap a dish card first so we know what to remove.", "OK");
+            await DisplayAlertAsync("Wybierz posilek", "Najpierw dotknij karty posilku, aby wybrac element do usuniecia.", "OK");
             return;
         }
 
         var confirmed = await DisplayAlertAsync(
-            "Remove dish",
-            $"Delete {_selectedDish.Dishname} from your nutrition list?",
-            "Delete",
-            "Cancel");
+            "Usun posilek",
+            $"Usun {_selectedDish.Dishname} z listy odzywiania?",
+            "Usun",
+            "Anuluj");
 
         if (!confirmed)
         {
@@ -167,7 +167,7 @@ public partial class Dashbord : ContentPage
             !int.TryParse(FatsEntry.Text, out var fats) ||
             protein < 0 || carbs < 0 || fats < 0)
         {
-            await DisplayAlertAsync("Missing data", "Fill in the dish name, description, and non-negative macro values.", "OK");
+            await DisplayAlertAsync("Brak danych", "Uzupelnij nazwe posilku, opis oraz nieujemne wartosci makro.", "OK");
             return;
         }
 
@@ -185,7 +185,7 @@ public partial class Dashbord : ContentPage
         {
             if (_activeUser == null)
             {
-                await DisplayAlertAsync("No user", "Log in again before adding dishes.", "OK");
+                await DisplayAlertAsync("Brak uzytkownika", "Zaloguj sie ponownie przed dodaniem posilku.", "OK");
                 return;
             }
 
@@ -266,7 +266,7 @@ public partial class Dashbord : ContentPage
         if (string.IsNullOrWhiteSpace(GoalTitleEntry.Text) ||
             string.IsNullOrWhiteSpace(GoalDescriptionEditor.Text))
         {
-            await DisplayAlertAsync("Missing data", "Add a goal title and description before saving.", "OK");
+            await DisplayAlertAsync("Brak danych", "Dodaj tytul i opis celu przed zapisaniem.", "OK");
             return;
         }
 
@@ -276,14 +276,14 @@ public partial class Dashbord : ContentPage
             Header = GoalTitleEntry.Text.Trim(),
             Description = GoalDescriptionEditor.Text.Trim(),
             FinishDate = GoalDatePicker.Date ?? DateTime.Today,
-            ScheduleType = GoalSchedulePicker.SelectedItem?.ToString() ?? "Daily",
+            ScheduleType = GoalSchedulePicker.SelectedItem?.ToString() ?? "Dzienny",
             IsRecurring = RecurringGoalCheckBox.IsChecked,
             Progress = GoalProgressSlider.Value / 100d
         };
 
         if (goal.UserId <= 0)
         {
-            await DisplayAlertAsync("No user", "Log in again before creating goals.", "OK");
+            await DisplayAlertAsync("Brak uzytkownika", "Zaloguj sie ponownie przed utworzeniem celu.", "OK");
             return;
         }
 
@@ -307,10 +307,10 @@ public partial class Dashbord : ContentPage
         }
 
         var confirmed = await DisplayAlertAsync(
-            "Delete goal",
-            $"Remove {goal.Header}?",
-            "Delete",
-            "Cancel");
+            "Usun cel",
+            $"Usun {goal.Header}?",
+            "Usun",
+            "Anuluj");
 
         if (!confirmed)
         {

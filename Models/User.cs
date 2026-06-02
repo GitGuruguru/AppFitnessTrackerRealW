@@ -11,14 +11,14 @@ namespace AppFitnessTrackerReal.Models
         private string _name = string.Empty;
         public string Name
         {
-            get => string.IsNullOrEmpty(_name) ? "Error: Name is empty" : _name;
+            get => string.IsNullOrEmpty(_name) ? "Blad: nazwa jest pusta" : _name;
             set => _name = value;
         }
 
         private string _password = string.Empty;
         public string Password
         {
-            get => string.IsNullOrEmpty(_password) ? "Error: Password is empty" : _password;
+            get => string.IsNullOrEmpty(_password) ? "Blad: haslo jest puste" : _password;
             set => _password = value;
         }
 

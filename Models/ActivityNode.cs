@@ -10,14 +10,14 @@ namespace AppFitnessTrackerReal.Models
         private string _name = string.Empty;
         public string Name
         {
-            get => string.IsNullOrWhiteSpace(_name) ? "Unnamed activity" : _name;
+            get => string.IsNullOrWhiteSpace(_name) ? "Aktywnosc bez nazwy" : _name;
             set => _name = value;
         }
 
         private string _description = string.Empty;
         public string Description
         {
-            get => string.IsNullOrWhiteSpace(_description) ? "No description provided." : _description;
+            get => string.IsNullOrWhiteSpace(_description) ? "Brak opisu." : _description;
             set => _description = value;
         }
 
