@@ -9,7 +9,7 @@ public partial class Dashbord : ContentPage
 {
     private readonly ObservableCollection<DietNode> _dishes = [];
     private readonly ObservableCollection<HistoryGoalNode> _goals = [];
-    private readonly MacroRingDrawable _macroRingDrawable = new();
+    private readonly CalorieRingDrawable _calorieRingDrawable = new();
 
     private User? _activeUser;
     private DietNode? _selectedDish;
@@ -19,6 +19,7 @@ public partial class Dashbord : ContentPage
     private double _displayProtein;
     private double _displayCarbs;
     private double _displayFats;
+    private double _displayCalories;
 
     public Dashbord()
     {
@@ -26,7 +27,7 @@ public partial class Dashbord : ContentPage
 
         DishesCollection.ItemsSource = _dishes;
         GoalsCollection.ItemsSource = _goals;
-        MacroRingView.Drawable = _macroRingDrawable;
+        MacroRingView.Drawable = _calorieRingDrawable;
         GoalSchedulePicker.ItemsSource = new List<string> { "Dzienny", "Tygodniowy", "Miesieczny", "Roczny" };
         GoalSchedulePicker.SelectedIndex = 0;
     }
@@ -55,6 +56,7 @@ public partial class Dashbord : ContentPage
     {
         _activeUser = await Db.GetActiveUser() ?? await Db.GetLatestUser();
         UserNameLabel.Text = _activeUser?.Name ?? "Gosc";
+        DailyCaloriesGoalEntry.Text = (_activeUser?.DailyCalorieGoal ?? 2000).ToString();
     }
 
     private async Task LoadDishesAsync()
@@ -62,7 +64,7 @@ public partial class Dashbord : ContentPage
         if (_activeUser == null)
         {
             _dishes.Clear();
-            await AnimateMacroRingAsync(0, 0, 0);
+            await AnimateCalorieRingAsync(0, 0, 0, 0);
             return;
         }
 
@@ -74,10 +76,30 @@ public partial class Dashbord : ContentPage
             _dishes.Add(dish);
         }
 
-        await AnimateMacroRingAsync(
+        await AnimateCalorieRingAsync(
+            _dishes.Sum(dish => dish.Calories),
             _dishes.Sum(dish => dish.Protein),
             _dishes.Sum(dish => dish.Carbs),
             _dishes.Sum(dish => dish.Fats));
+    }
+
+    private async void OnSaveCalorieGoalClicked(object? sender, EventArgs e)
+    {
+        if (_activeUser == null)
+        {
+            await DisplayAlertAsync("Brak uzytkownika", "Zaloguj sie ponownie przed ustawieniem celu kalorii.", "OK");
+            return;
+        }
+
+        if (!int.TryParse(DailyCaloriesGoalEntry.Text, out var calorieGoal) || calorieGoal <= 0)
+        {
+            await DisplayAlertAsync("Blad celu", "Podaj dodatni dzienny cel kalorii.", "OK");
+            return;
+        }
+
+        await Db.SaveDailyCalorieGoal(calorieGoal);
+        _activeUser.DailyCalorieGoal = calorieGoal;
+        await LoadDishesAsync();
     }
 
     private async Task LoadGoalsAsync()
@@ -165,9 +187,10 @@ public partial class Dashbord : ContentPage
             !int.TryParse(ProteinEntry.Text, out var protein) ||
             !int.TryParse(CarbsEntry.Text, out var carbs) ||
             !int.TryParse(FatsEntry.Text, out var fats) ||
-            protein < 0 || carbs < 0 || fats < 0)
+            !int.TryParse(CaloriesEntry.Text, out var calories) ||
+            protein < 0 || carbs < 0 || fats < 0 || calories < 0)
         {
-            await DisplayAlertAsync("Brak danych", "Uzupelnij nazwe posilku, opis oraz nieujemne wartosci makro.", "OK");
+            await DisplayAlertAsync("Brak danych", "Uzupelnij nazwe posilku, opis, kalorie oraz nieujemne wartosci makro.", "OK");
             return;
         }
 
@@ -178,6 +201,7 @@ public partial class Dashbord : ContentPage
             _selectedDish.Protein = protein;
             _selectedDish.Carbs = carbs;
             _selectedDish.Fats = fats;
+            _selectedDish.Calories = calories;
 
             await Db.UpdateDish(_selectedDish);
         }
@@ -196,7 +220,8 @@ public partial class Dashbord : ContentPage
                 Description = DishDescriptionEditor.Text.Trim(),
                 Protein = protein,
                 Carbs = carbs,
-                Fats = fats
+                Fats = fats,
+                Calories = calories
             };
 
             await Db.AddDish(dish);
@@ -228,6 +253,7 @@ public partial class Dashbord : ContentPage
         ProteinEntry.Text = dish.Protein.ToString();
         CarbsEntry.Text = dish.Carbs.ToString();
         FatsEntry.Text = dish.Fats.ToString();
+        CaloriesEntry.Text = dish.Calories.ToString();
     }
 
     private void ClearDishEditor()
@@ -237,6 +263,7 @@ public partial class Dashbord : ContentPage
         ProteinEntry.Text = string.Empty;
         CarbsEntry.Text = string.Empty;
         FatsEntry.Text = string.Empty;
+        CaloriesEntry.Text = string.Empty;
     }
 
     private void OnAddGoalClicked(object? sender, EventArgs e)
@@ -321,8 +348,9 @@ public partial class Dashbord : ContentPage
         await LoadGoalsAsync();
     }
 
-    private Task AnimateMacroRingAsync(double protein, double carbs, double fats)
+    private Task AnimateCalorieRingAsync(double calories, double protein, double carbs, double fats)
     {
+        var startCalories = _displayCalories;
         var startProtein = _displayProtein;
         var startCarbs = _displayCarbs;
         var startFats = _displayFats;
@@ -334,11 +362,12 @@ public partial class Dashbord : ContentPage
             "MacroRing",
             callback: progress =>
             {
+                _displayCalories = Lerp(startCalories, calories, progress);
                 _displayProtein = Lerp(startProtein, protein, progress);
                 _displayCarbs = Lerp(startCarbs, carbs, progress);
                 _displayFats = Lerp(startFats, fats, progress);
 
-                ApplyMacroVisuals(_displayProtein, _displayCarbs, _displayFats);
+                ApplyNutritionVisuals(_displayCalories, _displayProtein, _displayCarbs, _displayFats);
             },
             start: 0,
             end: 1,
@@ -347,24 +376,24 @@ public partial class Dashbord : ContentPage
             easing: Easing.CubicOut,
             finished: (_, _) =>
             {
-                ApplyMacroVisuals(protein, carbs, fats);
+                ApplyNutritionVisuals(calories, protein, carbs, fats);
                 completion.TrySetResult(true);
             });
 
         return completion.Task;
     }
 
-    private void ApplyMacroVisuals(double protein, double carbs, double fats)
+    private void ApplyNutritionVisuals(double calories, double protein, double carbs, double fats)
     {
-        _macroRingDrawable.Protein = (float)protein;
-        _macroRingDrawable.Carbs = (float)carbs;
-        _macroRingDrawable.Fats = (float)fats;
+        var calorieGoal = Math.Max(_activeUser?.DailyCalorieGoal ?? 2000, 1);
+        _calorieRingDrawable.Calories = (float)calories;
+        _calorieRingDrawable.CalorieGoal = calorieGoal;
         MacroRingView.Invalidate();
 
         ProteinValueLabel.Text = $"{Math.Round(protein)} g";
         CarbsValueLabel.Text = $"{Math.Round(carbs)} g";
         FatsValueLabel.Text = $"{Math.Round(fats)} g";
-        MacroTotalLabel.Text = $"{Math.Round(protein + carbs + fats)} g";
+        MacroTotalLabel.Text = $"{Math.Round(calories)} / {calorieGoal} kcal";
     }
 
     private static double Lerp(double start, double end, double progress)
@@ -379,41 +408,28 @@ public partial class Dashbord : ContentPage
     }
 }
 
-internal sealed class MacroRingDrawable : IDrawable
+internal sealed class CalorieRingDrawable : IDrawable
 {
-    public float Protein { get; set; }
-    public float Carbs { get; set; }
-    public float Fats { get; set; }
+    public float Calories { get; set; }
+    public int CalorieGoal { get; set; } = 2000;
 
     public void Draw(ICanvas canvas, RectF dirtyRect)
     {
         canvas.Antialias = true;
 
         var stroke = 26f;
-        var inset = stroke / 2f;
+        var radiusBoxSize = Math.Min(dirtyRect.Width, dirtyRect.Height) - stroke;
         var arcRect = new RectF(
-            dirtyRect.X + inset,
-            dirtyRect.Y + inset,
-            dirtyRect.Width - stroke,
-            dirtyRect.Height - stroke);
+            dirtyRect.Center.X - (radiusBoxSize / 2f),
+            dirtyRect.Center.Y - (radiusBoxSize / 2f),
+            radiusBoxSize,
+            radiusBoxSize);
 
         canvas.StrokeSize = stroke;
         canvas.StrokeLineCap = LineCap.Round;
 
-        canvas.StrokeColor = Color.FromArgb("#1D2A45");
-        canvas.DrawArc(arcRect, 0, 360, false, false);
-
-        var total = Math.Max(Protein + Carbs + Fats, 1f);
-        var startAngle = -90f;
-        var gap = 4f;
-
-        DrawSegment(canvas, arcRect, startAngle, (Protein / total * 360f) - gap, "#78D7B4");
-        startAngle += Protein / total * 360f;
-
-        DrawSegment(canvas, arcRect, startAngle, (Carbs / total * 360f) - gap, "#6AA7FF");
-        startAngle += Carbs / total * 360f;
-
-        DrawSegment(canvas, arcRect, startAngle, (Fats / total * 360f) - gap, "#FFB45C");
+        var progress = Math.Clamp(Calories / Math.Max(CalorieGoal, 1), 0f, 1f);
+        DrawSegment(canvas, arcRect, -90f, progress * 360f, "#F04438");
     }
 
     private static void DrawSegment(ICanvas canvas, RectF rect, float startAngle, float sweep, string colorHex)

@@ -33,6 +33,8 @@ namespace AppFitnessTrackerReal.Models
 
         public string HistoryJson { get; set; } = "[]";
 
+        public int DailyCalorieGoal { get; set; } = 2000;
+
         [Ignore]
         public List<DietNode> Dishes
         {

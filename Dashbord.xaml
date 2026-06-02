@@ -75,8 +75,30 @@
                                    FontFamily="MuseoModernoBold"
                                    FontSize="24"
                                    TextColor="White" />
+                            <Label Text="Pierscien pokazuje kalorie wzgledem dziennego celu."
+                                   FontFamily="OpenSansRegular"
+                                   FontSize="13"
+                                   TextColor="#9FB0CF" />
                           
                         </VerticalStackLayout>
+
+                        <Grid ColumnDefinitions="*,Auto"
+                              ColumnSpacing="10">
+                            <Entry x:Name="DailyCaloriesGoalEntry"
+                                   Placeholder="Dzienny cel kcal"
+                                   Keyboard="Numeric"
+                                   BackgroundColor="#16233C"
+                                   TextColor="White"
+                                   PlaceholderColor="#9FB0CF" />
+                            <Button Grid.Column="1"
+                                    Text="Ustaw"
+                                    Clicked="OnSaveCalorieGoalClicked"
+                                    FontFamily="OpenSansSemibold"
+                                    BackgroundColor="#2B6DFF"
+                                    TextColor="White"
+                                    CornerRadius="18"
+                                    Padding="16,10" />
+                        </Grid>
 
                         <Grid HorizontalOptions="Center"
                               WidthRequest="270"
@@ -87,16 +109,16 @@
                             <VerticalStackLayout HorizontalOptions="Center"
                                                  VerticalOptions="Center"
                                                  Spacing="2">
-                                <Label Text="Dzienny miks"
+                                <Label Text="Kalorie"
                                        HorizontalTextAlignment="Center"
                                        FontFamily="OpenSansRegular"
                                        FontSize="13"
                                        TextColor="#A8B6D6" />
                                 <Label x:Name="MacroTotalLabel"
-                                       Text="0 g"
+                                       Text="0 / 2000 kcal"
                                        HorizontalTextAlignment="Center"
                                        FontFamily="MuseoModernoBold"
-                                       FontSize="32"
+                                       FontSize="24"
                                        TextColor="White" />
                             </VerticalStackLayout>
                         </Grid>
@@ -230,8 +252,8 @@
                                         BackgroundColor="White"
                                         TextColor="#111827"
                                         MinimumHeightRequest="80" />
-                                <Grid ColumnDefinitions="*,*,*"
-                                      ColumnSpacing="10">
+                                <Grid ColumnDefinitions="*,*,*,*"
+                                      ColumnSpacing="8">
                                     <Entry x:Name="ProteinEntry"
                                            Placeholder="Bialko"
                                            Keyboard="Numeric"
@@ -246,6 +268,12 @@
                                     <Entry Grid.Column="2"
                                            x:Name="FatsEntry"
                                            Placeholder="Tluszcze"
+                                           Keyboard="Numeric"
+                                           BackgroundColor="White"
+                                           TextColor="#111827" />
+                                    <Entry Grid.Column="3"
+                                           x:Name="CaloriesEntry"
+                                           Placeholder="Kcal"
                                            Keyboard="Numeric"
                                            BackgroundColor="White"
                                            TextColor="#111827" />
@@ -300,10 +328,10 @@
                                                        FontSize="17"
                                                        TextColor="#111827" />
                                                 <Label Grid.Column="1"
-                                                       Text="{Binding Protein, StringFormat='B {0} g'}"
+                                                       Text="{Binding Calories, StringFormat='{0} kcal'}"
                                                        FontFamily="OpenSansRegular"
                                                        FontSize="13"
-                                                       TextColor="#78D7B4" />
+                                                       TextColor="#F04438" />
                                             </Grid>
                                             <Label Text="{Binding Description}"
                                                    FontFamily="OpenSansRegular"
@@ -318,6 +346,10 @@
                                                        FontFamily="OpenSansRegular"
                                                        FontSize="12"
                                                        TextColor="#F59E0B" />
+                                                <Label Text="{Binding Protein, StringFormat='Bialko {0} g'}"
+                                                       FontFamily="OpenSansRegular"
+                                                       FontSize="12"
+                                                       TextColor="#78D7B4" />
                                             </HorizontalStackLayout>
                                         </VerticalStackLayout>
                                     </Border>

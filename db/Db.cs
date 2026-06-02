@@ -27,6 +27,7 @@ namespace AppFitnessTrackerReal.db
 
             await EnsureColumnAsync("User", "DishesJson", "TEXT NOT NULL DEFAULT '[]'");
             await EnsureColumnAsync("User", "HistoryJson", "TEXT NOT NULL DEFAULT '[]'");
+            await EnsureColumnAsync("User", "DailyCalorieGoal", "INTEGER NOT NULL DEFAULT 2000");
         }
 
         private static async Task EnsureColumnAsync(string tableName, string columnName, string columnDefinition)
@@ -128,6 +129,13 @@ namespace AppFitnessTrackerReal.db
         {
             await Init();
             await _sqliteDb!.InsertAsync(activity);
+        }
+
+        public static async Task SaveDailyCalorieGoal(int calorieGoal)
+        {
+            var user = await GetRequiredActiveUser();
+            user.DailyCalorieGoal = calorieGoal;
+            await UpdateUser(user);
         }
 
         public static async Task<List<DietNode>> GetDishes(int userId)

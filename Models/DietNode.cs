@@ -47,5 +47,12 @@ namespace AppFitnessTrackerReal.Models
             get => _fats;
             set => _fats = value;
         }
+
+        private int _calories;
+        public int Calories
+        {
+            get => _calories;
+            set => _calories = value;
+        }
     }
 }
