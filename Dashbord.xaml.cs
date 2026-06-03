@@ -158,7 +158,7 @@ public partial class Dashbord : ContentPage
     {
         if (_selectedDish == null)
         {
-            await DisplayAlertAsync("Wybierz posilek", "Najpierw dotknij karty posilku, aby wybrac element do usuniecia.", "OK");
+            await DisplayAlertAsync("Wybierz posilek", "Najpierw wybierz element do usuniencia .", "OK");
             return;
         }
 
@@ -293,7 +293,7 @@ public partial class Dashbord : ContentPage
         if (string.IsNullOrWhiteSpace(GoalTitleEntry.Text) ||
             string.IsNullOrWhiteSpace(GoalDescriptionEditor.Text))
         {
-            await DisplayAlertAsync("Brak danych", "Dodaj tytul i opis celu przed zapisaniem.", "OK");
+            await DisplayAlertAsync("Brak danyych", "Dodaj tytul i opis celu przed zapisaniem.", "OK");
             return;
         }
 
