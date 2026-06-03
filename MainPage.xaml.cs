@@ -16,7 +16,7 @@ namespace AppFitnessTrackerReal
         {
             if (_loading) return;
             _loading = true;
-            // regex for email validation [a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}  
+           
             try
             {
                 if (string.IsNullOrWhiteSpace(loginStr.Text) ||
