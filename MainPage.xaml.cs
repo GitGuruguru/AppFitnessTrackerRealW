@@ -16,20 +16,20 @@ namespace AppFitnessTrackerReal
         {
             if (_loading) return;
             _loading = true;
-            // regex for email validation [a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,} copy pasted from chatlgbt of course 
+           
             try
             {
                 if (string.IsNullOrWhiteSpace(loginStr.Text) ||
                     string.IsNullOrWhiteSpace(PasswordStr.Text) ||
                     string.IsNullOrWhiteSpace(EmailStr.Text))
                 {
-                    await DisplayAlertAsync("Error", "All fields are required.", "OK");
+                    await DisplayAlertAsync("Blad", "Wszystkie pola sa wymagane.", "OK");
                     return;
                 }
 
                 if (!System.Text.RegularExpressions.Regex.IsMatch(EmailStr.Text, @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"))
                 {
-                    await DisplayAlertAsync("Error", "Invalid email format.", "OK");
+                    await DisplayAlertAsync("Blad", "Nieprawidlowy format email.", "OK");
                     return;
                 }
                 User newUser = new User

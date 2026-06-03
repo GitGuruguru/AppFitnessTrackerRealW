@@ -12,14 +12,14 @@ namespace AppFitnessTrackerReal.Models
         private string _header = string.Empty;
         public string Header
         {
-            get => string.IsNullOrWhiteSpace(_header) ? "Error: Header not provided" : _header;
+            get => string.IsNullOrWhiteSpace(_header) ? "Blad: nie podano naglowka" : _header;
             set => _header = value;
         }
 
         private string _description = string.Empty;
         public string Description
         {
-            get => string.IsNullOrWhiteSpace(_description) ? "Error: No description provided " : _description;
+            get => string.IsNullOrWhiteSpace(_description) ? "Blad: nie podano opisu" : _description;
             set => _description = value;
         }
 
@@ -27,8 +27,11 @@ namespace AppFitnessTrackerReal.Models
 
         public DateTime FinishDate { get; set; } = DateTime.UtcNow;
 
-        public string ScheduleType { get; set; } = "Daily";
+        public string ScheduleType { get; set; } = "Dzienny";
 
         public bool IsRecurring { get; set; }
+
+        [SQLite.Ignore]
+        public string RecurringText => IsRecurring ? "Tak" : "Nie";
     }
 }

@@ -16,11 +16,14 @@ namespace AppFitnessTrackerReal.db
                 return;
             }
 
+
             var dbDirectory = FileSystem.AppDataDirectory;
             Directory.CreateDirectory(dbDirectory);
 
             var dbPath = Path.Combine(dbDirectory, "fitnessDb.db");
             _sqliteDb = new SQLiteAsyncConnection(dbPath);
+           
+           
 
             await _sqliteDb.CreateTableAsync<User>();
             await _sqliteDb.CreateTableAsync<ActivityNode>();
@@ -28,6 +31,7 @@ namespace AppFitnessTrackerReal.db
 
             await EnsureColumnAsync("User", "DishesJson", "TEXT NOT NULL DEFAULT '[]'");
             await EnsureColumnAsync("User", "HistoryJson", "TEXT NOT NULL DEFAULT '[]'");
+            await EnsureColumnAsync("User", "DailyCalorieGoal", "INTEGER NOT NULL DEFAULT 2000");
         }
 
         private static async Task EnsureColumnAsync(string tableName, string columnName, string columnDefinition)
@@ -78,7 +82,7 @@ namespace AppFitnessTrackerReal.db
         {
             await Init();
             await _sqliteDb!.DeleteAsync(user);
-            return $"Succces, deleted {user.Name}, {user.Email}  !";
+            return $"Sukces, usunieto {user.Name}, {user.Email}!";
         }
 
         public static int GetActiveUserId()
@@ -129,6 +133,13 @@ namespace AppFitnessTrackerReal.db
         {
             await Init();
             await _sqliteDb!.InsertAsync(activity);
+        }
+
+        public static async Task SaveDailyCalorieGoal(int calorieGoal)
+        {
+            var user = await GetRequiredActiveUser();
+            user.DailyCalorieGoal = calorieGoal;
+            await UpdateUser(user);
         }
 
         public static async Task<List<DietNode>> GetDishes(int userId)
@@ -199,7 +210,7 @@ namespace AppFitnessTrackerReal.db
             var user = await GetActiveUser();
             if (user == null)
             {
-                throw new InvalidOperationException("No active user is available.");
+                throw new InvalidOperationException("Brak aktywnego uzytkownika.");
             }
 
             return user;
