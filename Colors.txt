@@ -1,5 +1,0 @@
-﻿--dusty-denim: #588ac7ff;
---cornflower-blue: #6890f4ff;
---cornflower-blue-2: #799affff;
---wisteria-blue: #8795ffff;
---soft-periwinkle: #9d8efcff;
