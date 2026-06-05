@@ -1,4 +1,4 @@
 # AppFitnessTrackerReal
 
 
-Auto is in Autor.md
+Autor is in Autor.md
