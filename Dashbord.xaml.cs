@@ -9,6 +9,9 @@ public partial class Dashbord : ContentPage
 {
     private readonly ObservableCollection<DietNode> _dishes = [];
     private readonly ObservableCollection<HistoryGoalNode> _goals = [];
+
+    private HistoryGoalNode? _selectedGoal;
+    private HistoryEditorMode _goalEditorMode = HistoryEditorMode.Add;
     private readonly CalorieRingDrawable _calorieRingDrawable = new();
 
     private User? _activeUser;
@@ -158,7 +161,7 @@ public partial class Dashbord : ContentPage
     {
         if (_selectedDish == null)
         {
-            await DisplayAlertAsync("Wybierz posilek", "Najpierw wybierz element do usuniencia .", "OK");
+            await DisplayAlertAsync("Wybierz posilek", "Najpierw wybierz element do usunienia .", "OK");
             return;
         }
 
@@ -268,7 +271,11 @@ public partial class Dashbord : ContentPage
 
     private void OnAddGoalClicked(object? sender, EventArgs e)
     {
+        _goalEditorMode = HistoryEditorMode.Add;
+        _selectedGoal = null;
+
         GoalEditorPanel.IsVisible = true;
+
         GoalTitleEntry.Text = string.Empty;
         GoalDescriptionEditor.Text = string.Empty;
         GoalDatePicker.Date = DateTime.Today;
@@ -287,35 +294,106 @@ public partial class Dashbord : ContentPage
     {
         GoalProgressValueLabel.Text = $"{Math.Round(e.NewValue)}%";
     }
+    private async void OnEditGoalClicked(object sender, EventArgs e)
+    {
+        if (_selectedGoal == null)
+        {
+            await DisplayAlertAsync(
+                "Wybierz cel",
+                "Najpierw wybierz cel do edycji.",
+                "OK");
 
+            return;
+        }
+
+        _goalEditorMode = HistoryEditorMode.Edit;
+
+        GoalEditorPanel.IsVisible = true;
+        FillGoals(_selectedGoal);
+    }
+    private void OnGoalSelectionChanged(object? sender, SelectionChangedEventArgs e)
+    {
+        _selectedGoal = e.CurrentSelection.FirstOrDefault() as HistoryGoalNode;
+    }
+    private void FillGoals(HistoryGoalNode goal)
+    {
+        GoalTitleEntry.Text = goal.Header;
+        GoalDescriptionEditor.Text = goal.Description;
+        GoalDatePicker.Date = goal.FinishDate;
+
+        GoalSchedulePicker.SelectedItem = goal.ScheduleType;
+
+        RecurringGoalCheckBox.IsChecked = goal.IsRecurring;
+
+        GoalProgressSlider.Value = goal.Progress * 100;
+
+        GoalProgressValueLabel.Text =
+            $"{Math.Round(GoalProgressSlider.Value)}%";
+    }
     private async void OnSaveGoalClicked(object? sender, EventArgs e)
     {
         if (string.IsNullOrWhiteSpace(GoalTitleEntry.Text) ||
             string.IsNullOrWhiteSpace(GoalDescriptionEditor.Text))
         {
-            await DisplayAlertAsync("Brak danyych", "Dodaj tytul i opis celu przed zapisaniem.", "OK");
+            await DisplayAlertAsync(
+                "Brak danych",
+                "Dodaj tytul i opis celu przed zapisaniem.",
+                "OK");
+
             return;
         }
 
-        var goal = new HistoryGoalNode
+        if (_goalEditorMode == HistoryEditorMode.Edit &&
+            _selectedGoal != null)
         {
-            UserId = _activeUser?.Id ?? 0,
-            Header = GoalTitleEntry.Text.Trim(),
-            Description = GoalDescriptionEditor.Text.Trim(),
-            FinishDate = GoalDatePicker.Date ?? DateTime.Today,
-            ScheduleType = GoalSchedulePicker.SelectedItem?.ToString() ?? "Dzienny",
-            IsRecurring = RecurringGoalCheckBox.IsChecked,
-            Progress = GoalProgressSlider.Value / 100d
-        };
+            _selectedGoal.Header = GoalTitleEntry.Text.Trim();
+            _selectedGoal.Description = GoalDescriptionEditor.Text.Trim();
+            _selectedGoal.FinishDate = (DateTime)GoalDatePicker.Date;
+            _selectedGoal.ScheduleType =
+                GoalSchedulePicker.SelectedItem?.ToString() ?? "Dzienny";
+            _selectedGoal.IsRecurring =
+                RecurringGoalCheckBox.IsChecked;
+            _selectedGoal.Progress =
+                GoalProgressSlider.Value / 100d;
 
-        if (goal.UserId <= 0)
+            await Db.UpdateGoal(_selectedGoal);
+        }
+        else
         {
-            await DisplayAlertAsync("Brak uzytkownika", "Zaloguj sie ponownie przed utworzeniem celu.", "OK");
-            return;
+            var goal = new HistoryGoalNode
+            {
+                UserId = _activeUser?.Id ?? 0,
+                Header = GoalTitleEntry.Text.Trim(),
+                Description = GoalDescriptionEditor.Text.Trim(),
+                FinishDate = (DateTime)GoalDatePicker.Date,
+                ScheduleType =
+                    GoalSchedulePicker.SelectedItem?.ToString()
+                    ?? "Dzienny",
+                IsRecurring =
+                    RecurringGoalCheckBox.IsChecked,
+                Progress =
+                    GoalProgressSlider.Value / 100d
+            };
+
+            if (goal.UserId <= 0)
+            {
+                await DisplayAlertAsync(
+                    "Brak uzytkownika",
+                    "Zaloguj sie ponownie przed utworzeniem celu.",
+                    "OK");
+
+                return;
+            }
+
+            await Db.AddGoal(goal);
         }
 
-        await Db.AddGoal(goal);
         GoalEditorPanel.IsVisible = false;
+
+        _selectedGoal = null;
+
+        GoalsCollection.SelectedItem = null;
+
         await LoadGoalsAsync();
     }
 
@@ -394,6 +472,18 @@ public partial class Dashbord : ContentPage
         CarbsValueLabel.Text = $"{Math.Round(carbs)} g";
         FatsValueLabel.Text = $"{Math.Round(fats)} g";
         MacroTotalLabel.Text = $"{Math.Round(calories)} / {calorieGoal} kcal";
+        if (calories > calorieGoal + 300)
+        {
+            MacroTotalLabel.TextColor = Color.FromArgb("#F44336"); // red
+        }
+        else if (calories >= calorieGoal)
+        {
+            MacroTotalLabel.TextColor = Color.FromArgb("#FF9800"); // orange
+        }
+        else
+        {
+            MacroTotalLabel.TextColor = Color.FromArgb("#4CAF50"); // green
+        }
     }
 
     private static double Lerp(double start, double end, double progress)
@@ -406,6 +496,12 @@ public partial class Dashbord : ContentPage
         Add,
         Edit
     }
+    private enum HistoryEditorMode
+    {
+        Add,
+        Edit
+    }
+
 }
 
 internal sealed class CalorieRingDrawable : IDrawable
@@ -428,8 +524,12 @@ internal sealed class CalorieRingDrawable : IDrawable
         canvas.StrokeSize = stroke;
         canvas.StrokeLineCap = LineCap.Round;
 
-        var progress = Math.Clamp(Calories / Math.Max(CalorieGoal, 1), 0f, 1f);
+        var progress = Calories >= CalorieGoal
+             ? 1f
+             : Calories / Math.Max(CalorieGoal, 1);
+
         DrawSegment(canvas, arcRect, -90f, progress * 360f, "#F04438");
+       
     }
 
     private static void DrawSegment(ICanvas canvas, RectF rect, float startAngle, float sweep, string colorHex)

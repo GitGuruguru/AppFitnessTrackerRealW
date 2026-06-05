@@ -10,7 +10,7 @@
               WidthRequest="420"
               MaximumWidthRequest="420"
               Padding="18,20,18,40"
-              BackgroundColor="Beige">
+              BackgroundColor="#FAF4E4">
             <VerticalStackLayout Spacing="18">
                 <Grid ColumnDefinitions="Auto,* ,Auto"
                       VerticalOptions="Center">
@@ -65,7 +65,7 @@
                             Padding="18,12" />
                 </Grid>
 
-                <Border BackgroundColor="#0F172A"
+                <Border BackgroundColor="#FAF4E4"
                         StrokeThickness="0"
                         Padding="22"
                         StrokeShape="RoundRectangle 28">
@@ -74,11 +74,8 @@
                             <Label Text="Bilans odzywiania"
                                    FontFamily="MuseoModernoBold"
                                    FontSize="24"
-                                   TextColor="White" />
-                            <Label Text="Pierscien pokazuje kalorie wzgledem dziennego celu."
-                                   FontFamily="OpenSansRegular"
-                                   FontSize="13"
-                                   TextColor="#9FB0CF" />
+                                   TextColor="Black" />
+                         
                           
                         </VerticalStackLayout>
 
@@ -113,13 +110,13 @@
                                        HorizontalTextAlignment="Center"
                                        FontFamily="OpenSansRegular"
                                        FontSize="13"
-                                       TextColor="#A8B6D6" />
+                                       TextColor="Black" />
                                 <Label x:Name="MacroTotalLabel"
                                        Text="0 / 2000 kcal"
                                        HorizontalTextAlignment="Center"
                                        FontFamily="MuseoModernoBold"
                                        FontSize="24"
-                                       TextColor="White" />
+                                       TextColor="Black" />
                             </VerticalStackLayout>
                         </Grid>
 
@@ -179,8 +176,8 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <Border BackgroundColor="White"
-                        Stroke="#D8E2F0"
+                <Border BackgroundColor="#FAF4E4"
+                        Stroke="Black"
                         StrokeThickness="1"
                         Padding="18"
                         StrokeShape="RoundRectangle 24">
@@ -191,17 +188,9 @@
                                        FontFamily="MuseoModernoBold"
                                        FontSize="22"
                                        TextColor="#111827" />
-                                <Label Text="Dodawaj, edytuj i usuwaj posilki bez opuszczania panelu."
-                                       FontFamily="OpenSansRegular"
-                                       FontSize="13"
-                                       TextColor="#667085" />
+                                
                             </VerticalStackLayout>
-                            <Label Grid.Column="1"
-                                   Text="Dotknij posilku, aby edytowac"
-                                   VerticalOptions="Center"
-                                   FontFamily="OpenSansRegular"
-                                   FontSize="12"
-                                   TextColor="#98A2B3" />
+                         
                         </Grid>
 
                         <Grid ColumnDefinitions="*,*,*"
@@ -359,28 +348,38 @@
                     </VerticalStackLayout>
                 </Border>
 
-                <Border BackgroundColor="White"
-                        Stroke="#D8E2F0"
+                <Border BackgroundColor="#FAF4E4"
+                        Stroke="#333"
                         StrokeThickness="1"
                         Padding="18"
                         StrokeShape="RoundRectangle 24">
                     <VerticalStackLayout Spacing="14">
-                        <Grid ColumnDefinitions="*,Auto">
+                        <Grid ColumnDefinitions="*,*,Auto">
                             <Label Text="Cele"
                                    FontFamily="MuseoModernoBold"
                                    FontSize="22"
                                    TextColor="#111827" />
                             <Button Grid.Column="1"
+                                      Text="Edytuj"
+                                      Clicked="OnEditGoalClicked"
+                                      FontFamily="OpenSansSemibold"
+                                      BackgroundColor="#0F172A"
+                                      TextColor="White"
+                                      CornerRadius="14"
+                                      Margin="0,2,17,3" /> 
+                            <Button Grid.Column="2"
                                     Text="+ Dodaj"
                                     Clicked="OnAddGoalClicked"
                                     FontFamily="OpenSansSemibold"
                                     BackgroundColor="#2B6DFF"
                                     TextColor="White"
                                     CornerRadius="18" />
+
+                        
                         </Grid>
 
                         <Border x:Name="GoalEditorPanel"
-                                BackgroundColor="#F8FAFC"
+                                BackgroundColor="White"
                                 Stroke="#D8E2F0"
                                 StrokeThickness="1"
                                 Padding="16"
@@ -401,16 +400,32 @@
                                         BackgroundColor="White"
                                         TextColor="#111827"
                                         MinimumHeightRequest="80" />
-                                <Grid ColumnDefinitions="*,*"
-                                      ColumnSpacing="10">
-                                    <DatePicker x:Name="GoalDatePicker"
+                                <Grid ColumnDefinitions="*,*" 
+                                      ColumnSpacing="10"
+                                      RowDefinitions="*,*">
+                                    <Label Text="Termin realizacji"
+                                           VerticalOptions="Center"
+                                           FontFamily="OpenSansRegular"
+                                           FontSize="14"
+                                           TextColor="#d1d1d1"
+                                           Grid.Row="0"/>
+                                        <DatePicker x:Name="GoalDatePicker"
                                                 BackgroundColor="White"
-                                                TextColor="#111827" />
+                                                TextColor="#111827"
+                                                    Grid.Row="1"
+                                                 />
+                                    <Label Text="Harmonogram"
+                                           VerticalOptions="Center"
+                                           FontFamily="OpenSansRegular"
+                                           FontSize="14"
+                                           TextColor="#d1d1d1"
+                                           Grid.Row="0"
+                                           Grid.Column="1"/>       
                                     <Picker Grid.Column="1"
                                             x:Name="GoalSchedulePicker"
-                                            Title="Harmonogram"
+                                        
                                             BackgroundColor="White"
-                                            TextColor="#111827" />
+                                            TextColor="#111827" Grid.Row="1" />
                                 </Grid>
                                 <Grid ColumnDefinitions="*,Auto"
                                       ColumnSpacing="10">
@@ -464,7 +479,8 @@
                         </Border>
 
                         <CollectionView x:Name="GoalsCollection"
-                                        SelectionMode="None">
+                                        SelectionMode="Single"
+                                        SelectionChanged="OnGoalSelectionChanged">  
                             <CollectionView.EmptyView>
                                 <Border BackgroundColor="#F8FAFC"
                                         StrokeThickness="0"
@@ -502,7 +518,7 @@
                                                    FontSize="13"
                                                    TextColor="#667085" />
                                             <HorizontalStackLayout Spacing="10">
-                                                <Label Text="{Binding FinishDate, StringFormat='Termin {0:dd MMM yyyy}'}"
+                                                <Label Text="{Binding FinishDate, StringFormat='Termin do {0:dd MMM yyyy}'}"
                                                        FontFamily="OpenSansRegular"
                                                        FontSize="12"
                                                        TextColor="#475467" />
@@ -530,6 +546,7 @@
                                                         TextColor="White"
                                                         CornerRadius="14"
                                                         Padding="12,6" />
+                                          
                                             </Grid>
                                         </VerticalStackLayout>
                                     </Border>
