@@ -66,10 +66,13 @@
                 </Grid>
 
                 <Border BackgroundColor="#FAF4E4"
-                        StrokeThickness="0"
-                        Padding="22"
-                        StrokeShape="RoundRectangle 28">
-                    <VerticalStackLayout Spacing="18">
+                         Stroke="Black"
+                         StrokeThickness="1"
+                         Padding="18"
+                         StrokeShape="RoundRectangle 24"
+                        >
+                    <VerticalStackLayout Spacing="18"
+                                        >
                         <VerticalStackLayout Spacing="4">
                             <Label Text="Bilans odzywiania"
                                    FontFamily="MuseoModernoBold"

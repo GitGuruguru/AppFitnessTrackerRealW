@@ -23,7 +23,6 @@ namespace AppFitnessTrackerReal.Models
             set => _description = value;
         }
 
-        // sqlite-net cannot map complex collection properties directly.
         [Ignore]
         public List<Ingridien> Ingridiens { get; init; } = [];
 
