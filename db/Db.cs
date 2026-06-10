@@ -1,6 +1,6 @@
 using AppFitnessTrackerReal.Models;
 using SQLite;
-
+using AppFitnessTrackerReal.sec;
 namespace AppFitnessTrackerReal.db
 {
     internal class Db
@@ -45,24 +45,32 @@ namespace AppFitnessTrackerReal.db
             await _sqliteDb.ExecuteAsync($"ALTER TABLE [{tableName}] ADD COLUMN [{columnName}] {columnDefinition}");
         }
 
-        public static async Task<User> GetOrCreateUser(User candidate)
+        public static async Task<User> GetOrCreateUser(User candidate,string passUnhashed)
         {
             await Init();
+       
+          
+                var existingUser = await _sqliteDb!
+                    .Table<User>()
+                    .Where(user => user.Email == candidate.Email)
+                    .FirstOrDefaultAsync();
 
-            var existingUser = await _sqliteDb!
-                .Table<User>()
-                .Where(user => user.Email == candidate.Email)
-                .FirstOrDefaultAsync();
+                if (existingUser != null)
+                {
+                    bool isRigthPassword = PasswordHasher.VerifyPassword(passUnhashed, candidate.Password);
+                    if (!isRigthPassword)
+                        {
+                            throw new UnauthorizedAccessException("Nieprawidłowe hasło.");
+                    }
+                    Preferences.Set(ActiveUserPreferenceKey, existingUser.Id);
+                    
+                    return existingUser;
+                }
 
-            if (existingUser != null)
-            {
-                Preferences.Set(ActiveUserPreferenceKey, existingUser.Id);
-                return existingUser;
-            }
-
-            await _sqliteDb.InsertAsync(candidate);
-            Preferences.Set(ActiveUserPreferenceKey, candidate.Id);
-            return candidate;
+                await _sqliteDb.InsertAsync(candidate);
+                Preferences.Set(ActiveUserPreferenceKey, candidate.Id);
+                return candidate;
+            
         }
 
         public static async Task AddUser(User user)

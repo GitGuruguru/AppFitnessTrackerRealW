@@ -7,9 +7,13 @@ namespace AppFitnessTrackerReal
     {
         private bool _loading = false;
 
+        
+
         public MainPage()
         {
             InitializeComponent();
+            
+          
         }
 
         private async Task LoginUserAsync()
@@ -41,7 +45,7 @@ namespace AppFitnessTrackerReal
                     History = new List<HistoryGoalNode>()
                 };
 
-                await Db.GetOrCreateUser(newUser);
+                await Db.GetOrCreateUser(newUser,PasswordStr.Text);
                 await Shell.Current.GoToAsync("DashBord");
             }
             finally
@@ -49,7 +53,6 @@ namespace AppFitnessTrackerReal
                 _loading = false;
             }
         }
-
         private async void OnLoginClicked(object? sender, EventArgs e)
         {
             await LoginUserAsync();

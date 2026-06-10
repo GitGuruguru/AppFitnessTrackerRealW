@@ -1,6 +1,6 @@
 using SQLite;
 using System.Text.Json;
-
+using AppFitnessTrackerReal.sec;
 namespace AppFitnessTrackerReal.Models
 {
     internal class User
@@ -19,7 +19,7 @@ namespace AppFitnessTrackerReal.Models
         public string Password
         {
             get => string.IsNullOrEmpty(_password) ? "Blad: haslo jest puste" : _password;
-            set => _password = value;
+            set => _password = PasswordHasher.HashPassword(value);
         }
 
         private string _email = string.Empty;
