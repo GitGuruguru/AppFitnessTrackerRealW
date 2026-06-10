@@ -29,9 +29,6 @@ namespace AppFitnessTrackerReal.Models
 
         public string ScheduleType { get; set; } = "Dzienny";
 
-        public bool IsRecurring { get; set; }
 
-        [SQLite.Ignore]
-        public string RecurringText => IsRecurring ? "Tak" : "Nie";
     }
 }

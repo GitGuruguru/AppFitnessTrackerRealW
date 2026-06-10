@@ -430,17 +430,7 @@
                                             BackgroundColor="White"
                                             TextColor="#111827" Grid.Row="1" />
                                 </Grid>
-                                <Grid ColumnDefinitions="*,Auto"
-                                      ColumnSpacing="10">
-                                    <Label Text="Cel powtarzalny"
-                                           VerticalOptions="Center"
-                                           FontFamily="OpenSansRegular"
-                                           FontSize="14"
-                                           TextColor="#111827" />
-                                    <CheckBox Grid.Column="1"
-                                              x:Name="RecurringGoalCheckBox"
-                                              Color="#2B6DFF" />
-                                </Grid>
+                               
                                 <VerticalStackLayout Spacing="4">
                                     <Grid ColumnDefinitions="*,Auto">
                                         <Label Text="Postep"

@@ -280,7 +280,7 @@ public partial class Dashbord : ContentPage
         GoalDescriptionEditor.Text = string.Empty;
         GoalDatePicker.Date = DateTime.Today;
         GoalSchedulePicker.SelectedIndex = 0;
-        RecurringGoalCheckBox.IsChecked = false;
+ 
         GoalProgressSlider.Value = 0;
         GoalProgressValueLabel.Text = "0%";
     }
@@ -323,7 +323,6 @@ public partial class Dashbord : ContentPage
 
         GoalSchedulePicker.SelectedItem = goal.ScheduleType;
 
-        RecurringGoalCheckBox.IsChecked = goal.IsRecurring;
 
         GoalProgressSlider.Value = goal.Progress * 100;
 
@@ -351,8 +350,6 @@ public partial class Dashbord : ContentPage
             _selectedGoal.FinishDate = (DateTime)GoalDatePicker.Date;
             _selectedGoal.ScheduleType =
                 GoalSchedulePicker.SelectedItem?.ToString() ?? "Dzienny";
-            _selectedGoal.IsRecurring =
-                RecurringGoalCheckBox.IsChecked;
             _selectedGoal.Progress =
                 GoalProgressSlider.Value / 100d;
 
@@ -369,8 +366,7 @@ public partial class Dashbord : ContentPage
                 ScheduleType =
                     GoalSchedulePicker.SelectedItem?.ToString()
                     ?? "Dzienny",
-                IsRecurring =
-                    RecurringGoalCheckBox.IsChecked,
+              
                 Progress =
                     GoalProgressSlider.Value / 100d
             };
